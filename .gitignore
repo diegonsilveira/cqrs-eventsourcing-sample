@@ -1,0 +1,8 @@
+# maven
+target/
+.flattened-pom.xml
+
+# eclipse
+.settings/
+.classpath
+.project
