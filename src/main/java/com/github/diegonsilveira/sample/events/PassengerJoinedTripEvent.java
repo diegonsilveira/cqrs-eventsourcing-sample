@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemberJoinedStarshipEvent {
+public class PassengerJoinedTripEvent {
 	
-	private String starshipId;
-	private String memberName;
+	private String tripId;
+	private String name;
 }

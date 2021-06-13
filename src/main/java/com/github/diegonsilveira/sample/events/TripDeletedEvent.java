@@ -1,4 +1,4 @@
-package com.github.diegonsilveira.sample.query;
+package com.github.diegonsilveira.sample.events;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StarshipMembersQuery {
+public class TripDeletedEvent {
 
-	private String starshipId;
+	private String tripId;
+
 }

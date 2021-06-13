@@ -11,10 +11,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class JoinStarshipCommand {
+public class DeleteTripCommand {
 
 	@TargetAggregateIdentifier
-	private String starshipId;
-	
-	private String memberName;
+	private String tripId;
+
 }

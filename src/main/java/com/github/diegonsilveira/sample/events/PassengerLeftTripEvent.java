@@ -9,9 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StarshipCreatedEvent {
-
-	private String starshipId;
-	private String name;
+public class PassengerLeftTripEvent {
 	
+	private String tripId;
+	private String name;
 }

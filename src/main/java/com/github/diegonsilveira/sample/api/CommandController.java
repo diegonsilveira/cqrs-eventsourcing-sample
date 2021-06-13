@@ -1,7 +1,7 @@
 package com.github.diegonsilveira.sample.api;
 
 import java.util.UUID;
-import java.util.concurrent.Future;
+import java.util.concurrent.CompletableFuture;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
@@ -14,13 +14,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.github.diegonsilveira.sample.command.CreateStarshipCommand;
-import com.github.diegonsilveira.sample.command.JoinStarshipCommand;
-import com.github.diegonsilveira.sample.command.LeaveStarshipCommand;
+import com.github.diegonsilveira.sample.command.CreateTripCommand;
+import com.github.diegonsilveira.sample.command.DeleteTripCommand;
+import com.github.diegonsilveira.sample.command.JoinPassengerCommand;
+import com.github.diegonsilveira.sample.command.LeavePassengerCommand;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 @RestController
 public class CommandController {
 
@@ -30,42 +33,50 @@ public class CommandController {
 		this.commandGateway = commandGateway;
 	}
 
-	@PostMapping("/starships")
-	public Future<String> createStarship(@RequestBody @Valid Starship starship) {
-		Assert.notNull(starship.getName(), "name is mandatory for starship!");
+	@PostMapping("/travels")
+	public CompletableFuture<String> createTrip(@RequestBody @Valid TripDTO trip) {
+		Assert.notNull(trip.getDestination(), "destination is mandatory for travel!");
+		String id = trip.getId() == null ? UUID.randomUUID().toString() : trip.getId();
 
-		String starshipId = starship.getStarshipId() == null ? UUID.randomUUID().toString() : starship.getStarshipId();
-		return commandGateway.send(new CreateStarshipCommand(starshipId, starship.getName()));
+		return commandGateway.send(new CreateTripCommand(id, trip.getDestination(), trip.getDistance()));
 	}
 
-	@PostMapping("/starships/{starshipId}/members")
-	public Future<Void> joinStarship(@PathVariable String starshipId, @RequestBody @Valid Member member) {
-		Assert.notNull(member.getMemberName(), "name is mandatory for a member!");
-		
-		return commandGateway.send(new JoinStarshipCommand(starshipId, member.getMemberName()));
+	@DeleteMapping("/travels/{tripId}")
+	public CompletableFuture<String> deleteTrip(@PathVariable String tripId) {
+		Assert.notNull(tripId, "tripId is mandatory for delete a travel!");
+
+		return commandGateway.send(new DeleteTripCommand(tripId));
 	}
 
-	@DeleteMapping("/starships/{starshipId}/members")
-	public Future<Void> leaveStarship(@PathVariable String starshipId, @RequestBody @Valid Member member) {
-		Assert.notNull(member.getMemberName(), "name is mandatory to left starship!");
-		
-		return commandGateway.send(new LeaveStarshipCommand(starshipId, member.getMemberName()));
+	@PostMapping("/travels/{tripId}/passengers")
+	public CompletableFuture<Void> joinTrip(@PathVariable String tripId, @RequestBody @Valid PassengerDTO passenger) {
+		Assert.notNull(passenger.getName(), "name is mandatory for a new passenger!");
+
+		return commandGateway.send(new JoinPassengerCommand(tripId, passenger.getName()));
+	}
+
+	@DeleteMapping("/travels/{tripId}/passengers")
+	public CompletableFuture<Void> leaveTrip(@PathVariable String tripId, @RequestBody @Valid PassengerDTO passenger) {
+		return commandGateway.send(new LeavePassengerCommand(tripId, passenger.getName()));
 	}
 
 	@Getter
 	@Setter
-	public static class Starship {
-		private String starshipId;
+	public static class TripDTO {
+		private String id;
 
+		@NotEmpty
+		private String destination;
+
+		@NotEmpty
+		private int distance;
+	}
+
+	@Getter
+	@Setter
+	public static class PassengerDTO {
 		@NotEmpty
 		private String name;
-	}
-
-	@Getter
-	@Setter
-	public static class Member {
-		@NotEmpty
-		private String memberName;
 	}
 
 }

@@ -11,10 +11,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateStarshipCommand {
-	
+public class CreateTripCommand {
+
 	@TargetAggregateIdentifier
-	private String starshipId;
-	
-	private String name;
+	private String tripId;
+	private String destination;
+	private int distance;
 }
