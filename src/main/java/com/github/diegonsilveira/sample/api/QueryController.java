@@ -13,6 +13,9 @@ import com.github.diegonsilveira.sample.query.TripPassengerQuery;
 import com.github.diegonsilveira.sample.query.TripQuery;
 import com.github.diegonsilveira.sample.query.trip.Trip;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 @RestController
 public class QueryController {
 
@@ -24,12 +27,21 @@ public class QueryController {
 
 	@GetMapping("travels")
 	public Future<List<Trip>> listTravels() {
-		return queryGateway.query(new TripQuery(), new MultipleInstancesResponseType<>(Trip.class));
+		long start = System.currentTimeMillis();
+
+		Future<List<Trip>> query = queryGateway.query(new TripQuery(), new MultipleInstancesResponseType<>(Trip.class));
+
+		long elapsedTimeMillis = System.currentTimeMillis() - start;
+
+		float elapsedTimeSec = elapsedTimeMillis / 1000F;
+
+		log.info("Query time: {}", elapsedTimeSec);
+
+		return query;
 	}
 
 	@GetMapping("/travels/{tripId}/passengers")
 	public Future<List<String>> passengersInTravel(@PathVariable String tripId) {
-		return queryGateway.query(new TripPassengerQuery(tripId),
-				new MultipleInstancesResponseType<>(String.class));
+		return queryGateway.query(new TripPassengerQuery(tripId), new MultipleInstancesResponseType<>(String.class));
 	}
 }
