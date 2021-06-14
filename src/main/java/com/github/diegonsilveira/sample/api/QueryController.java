@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.diegonsilveira.sample.query.TripByIdQuery;
 import com.github.diegonsilveira.sample.query.TripPassengerQuery;
 import com.github.diegonsilveira.sample.query.TripQuery;
 import com.github.diegonsilveira.sample.query.trip.Trip;
@@ -30,6 +31,22 @@ public class QueryController {
 		long start = System.currentTimeMillis();
 
 		Future<List<Trip>> query = queryGateway.query(new TripQuery(), new MultipleInstancesResponseType<>(Trip.class));
+
+		long elapsedTimeMillis = System.currentTimeMillis() - start;
+
+		float elapsedTimeSec = elapsedTimeMillis / 1000F;
+
+		log.info("Query time: {}", elapsedTimeSec);
+
+		return query;
+	}
+
+	@GetMapping("/travels/{tripId}")
+	public Future<List<Trip>> getById(@PathVariable String tripId) {
+		long start = System.currentTimeMillis();
+
+		Future<List<Trip>> query = queryGateway.query(new TripByIdQuery(tripId),
+				new MultipleInstancesResponseType<>(Trip.class));
 
 		long elapsedTimeMillis = System.currentTimeMillis() - start;
 
