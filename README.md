@@ -3,13 +3,8 @@
 ## Interface do usuário do Swagger
 Acesso: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
 
-## H2 Console
-Executar a classe Servers.java para subir o banco. 
-
-> Implementação manual para simulação de diversas instancias.
-
-Acesso: [http://localhost:8080/h2-console](http://localhost:8080/h2-console) 
-* Digite a URL JDBC: jdbc:h2:tcp://localhost:9092/mem:sample > Conectar.
+## PostgreSQL
+Para utilizar o PostgreSQL, basta subir uma imagem docker com o comando: `sudo docker run --name some-postgres -p 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres`.
 
 ## Axon Framework
 Para utilizar o Axon Framework é necessário utilizar o AxonServer. Para executar o AxonServer como um contêiner de docker:  `sudo docker run -d -p 8024:8024 -p 8124:8124 -p 8224:8224 --name axonserver axoniq/axonserver`.
